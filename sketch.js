@@ -20,12 +20,17 @@ let chordList = ["A Major", "A minor",
 const MAX_DELAY = 10;
 const MIN_DELAY = 0.5;
 
+const RATE = 0.5;
+
 let chordIndex;
 
 let lastChordChangeMillis;
 
 let startButton;
 let stopButton;
+
+let fasterButton;
+let slowerButton;
 
 let BACKGROUND;
 
@@ -38,10 +43,10 @@ function preload() {
 let speedSlider;
 
 function setup() {
-  createCanvas(640, 360);
+  createCanvas(windowWidth, windowHeight);
   textSize(24);
   background(BACKGROUND);
-  
+
   isStarted = false;
 
   chordIndex = int(random(chordList.length))
@@ -50,6 +55,51 @@ function setup() {
   createStartStopButtons();
   createSpeedSlider();
   drawSliderText();
+  createSpeedButtons();
+}
+
+function createSpeedButtons() {
+
+  let boarderThickness = width / 300;
+
+  fasterButton = createButton("Faster");
+  fasterButton.style("width", (speedSlider.size().width / 8).toString() + "px");
+  fasterButton.style("height", (speedSlider.size().height * 2).toString() + "px");
+  fasterButton.position(stopButton.position().x + stopButton.size().width - fasterButton.size().width, height / 2 - fasterButton.size().height / 2);
+
+  fasterButton.style("background-color", color(BACKGROUND));
+  fasterButton.style("border", boarderThickness.toString() + "px solid white");
+  fasterButton.style("color", "white");
+  fasterButton.style("border-radius", (fasterButton.size().height / 5).toString() + "px");
+  fasterButton.style("font-size", (fasterButton.size().height / 2).toString() + "px");
+  fasterButton.style("font-family", "sans-serif");
+  fasterButton.style("outline", "none");
+  fasterButton.mouseOver(() => fasterButton.style("background-color", adjust(BACKGROUND, 50))).mouseOut(() => {
+    fasterButton.style("background-color", color(BACKGROUND));
+    fasterButton.style("color", color(255));
+  });
+  
+  fasterButton.mouseClicked(() => speedSlider.value(speedSlider.value() + RATE));
+  
+
+  slowerButton = createButton("Slower");
+  slowerButton.style("width", (speedSlider.size().width / 8).toString() + "px");
+  slowerButton.style("height", (speedSlider.size().height * 2).toString() + "px");
+  slowerButton.position(startButton.position().x, height / 2 - slowerButton.size().height / 2);
+
+  slowerButton.style("background-color", color(BACKGROUND));
+  slowerButton.style("border", boarderThickness.toString() + "px solid white");
+  slowerButton.style("color", "white");
+  slowerButton.style("border-radius", (slowerButton.size().height / 5).toString() + "px");
+  slowerButton.style("font-size", (slowerButton.size().height / 2).toString() + "px");
+  slowerButton.style("font-family", "sans-serif");
+  slowerButton.style("outline", "none");
+  slowerButton.mouseOver(() => slowerButton.style("background-color", adjust(BACKGROUND, 50))).mouseOut(() => {
+    slowerButton.style("background-color", color(BACKGROUND));
+    slowerButton.style("color", color(255));
+  });
+  slowerButton.mouseClicked(() => speedSlider.value(speedSlider.value() - RATE));
+
 }
 
 function adjust(col, amount) {
@@ -119,7 +169,6 @@ function createStartStopButtons() {
   stopButton.style("width", ((width / 2) * buttonWidthPercentOfHalf).toString() + "px");
   stopButton.style("height", (height * buttonHeightPercent).toString() + "px");
   stopButton.position(3 * width / 4 - stopButton.size().width / 2, height - stopButton.size().height * (1 + percentOfButtonHeightGap));
-
   stopButton.style("background-color", color(BACKGROUND));
   stopButton.style("border", boarderThickness.toString() + "px solid white");
   stopButton.style("color", "white");
@@ -137,7 +186,7 @@ function createStartStopButtons() {
 function start() {
   isStarted = true;
   lastChordChangeMillis = millis();
-  
+
   stopButton.style("background-color", color(BACKGROUND));
   stopButton.style("color", color(255));
 
@@ -147,7 +196,7 @@ function start() {
 
 function stop() {
   isStarted = false;
-  
+
   stopButton.style("background-color", color(255));
   stopButton.style("color", color(0));
 
