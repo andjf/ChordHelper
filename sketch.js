@@ -98,13 +98,13 @@ function createStartStopButtons() {
   startButton.mousePressed(start);
   startButton.style("width", ((width / 2) * buttonWidthPercentOfHalf).toString() + "px");
   startButton.style("height", (height * buttonHeightPercent).toString() + "px");
-  startButton.position(width / 4 - startButton.width / 2, height - startButton.height * (1 + percentOfButtonHeightGap));
+  startButton.position(width / 4 - startButton.size().width / 2, height - startButton.size().height * (1 + percentOfButtonHeightGap));
 
   startButton.style("background-color", color(BACKGROUND));
   startButton.style("border", boarderThickness.toString() + "px solid white");
   startButton.style("color", "white");
-  startButton.style("border-radius", (startButton.height / 5).toString() + "px");
-  startButton.style("font-size", (startButton.height / 2).toString() + "px");
+  startButton.style("border-radius", (startButton.size().height / 5).toString() + "px");
+  startButton.style("font-size", (startButton.size().height / 2).toString() + "px");
   startButton.style("font-family", "sans-serif");
   startButton.style("outline", "none");
   startButton.mouseOver(() => startButton.style("background-color", adjust(BACKGROUND, 50))).mouseOut(() => {
@@ -118,13 +118,13 @@ function createStartStopButtons() {
   stopButton.mousePressed(stop);
   stopButton.style("width", ((width / 2) * buttonWidthPercentOfHalf).toString() + "px");
   stopButton.style("height", (height * buttonHeightPercent).toString() + "px");
-  stopButton.position(3 * width / 4 - stopButton.width / 2, height - stopButton.height * (1 + percentOfButtonHeightGap));
+  stopButton.position(3 * width / 4 - stopButton.size().width / 2, height - stopButton.size().height * (1 + percentOfButtonHeightGap));
 
   stopButton.style("background-color", color(BACKGROUND));
   stopButton.style("border", boarderThickness.toString() + "px solid white");
   stopButton.style("color", "white");
-  stopButton.style("border-radius", (stopButton.height / 5).toString() + "px");
-  stopButton.style("font-size", (stopButton.height / 2).toString() + "px");
+  stopButton.style("border-radius", (stopButton.size().height / 5).toString() + "px");
+  stopButton.style("font-size", (stopButton.size().height / 2).toString() + "px");
   stopButton.style("font-family", "sans-serif");
   stopButton.style("outline", "none");
   stopButton.mouseOver(() => stopButton.style("background-color", adjust(BACKGROUND, 50))).mouseOut(() => {
