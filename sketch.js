@@ -1,21 +1,8 @@
-let chordList = ["A Major", "A minor",
-  "B Major", "B minor",
-  "C Major", "C minor",
-  "D Major", "D minor",
-  "E Major", "E minor",
-  "F Major", "F minor",
-  "G Major", "G minor",
-  "A# Major", "A# minor",
-  "C# Major", "C# minor",
-  "D# Major", "D# minor",
-  "F# Major", "F# minor",
-  "G# Major", "G# minor",
-  "A♭ Major", "A♭ minor",
-  "B♭ Major", "B♭ minor",
-  "D♭ Major", "D♭ minor",
-  "E♭ Major", "E♭ minor",
-  "G♭ Major", "G♭ minor",
-];
+let chordList = [];
+
+let wholeNotes = ["A", "B", "C", "D", "E", "F", "G"];
+let sharpNotes = ["A#", "C#", "D#", "F#", "G#"];
+let flatNotes = ["A♭", "B♭", "D♭", "E♭", "G♭"];
 
 const MAX_DELAY = 10;
 const MIN_DELAY = 0.5;
@@ -32,12 +19,19 @@ let stopButton;
 let fasterButton;
 let slowerButton;
 
+let naturalNoteCheckBox;
+let sharpNoteCheckBox;
+let flatNoteCheckBox;
+
+let majorCheckBox;
+let minorCheckBox;
+
 let BACKGROUND;
 
 let isStarted;
 
 function preload() {
-  BACKGROUND = color(33, 146, 181);
+  BACKGROUND = color(51);
 }
 
 let speedSlider;
@@ -52,10 +46,71 @@ function setup() {
   chordIndex = int(random(chordList.length))
   lastChordChangeMillis = 0;
 
+  
   createStartStopButtons();
   createSpeedSlider();
   drawSliderText();
   createSpeedButtons();
+  createCheckBoxes();
+  
+}
+
+function createCheckBoxes() {
+  let currentY = width / 50;
+  let xPos = width / 50;
+  let space = width / 40;
+  naturalNoteCheckBox = createCheckbox(" Natural", true);
+  naturalNoteCheckBox.position(xPos, currentY);
+  currentY += space;
+  sharpNoteCheckBox = createCheckbox(" Sharps", false);
+  sharpNoteCheckBox.position(xPos, currentY);
+  currentY += space;
+  flatNoteCheckBox = createCheckbox(" Flats", false);
+  flatNoteCheckBox.position(xPos, currentY);
+  currentY += space * 2;
+
+  majorCheckBox = createCheckbox(" Major", true);
+  majorCheckBox.position(xPos, currentY);
+  currentY += space;
+  minorCheckBox = createCheckbox(" Minor", false);
+  minorCheckBox.position(xPos, currentY);
+
+  let boxes = [naturalNoteCheckBox, sharpNoteCheckBox, flatNoteCheckBox, majorCheckBox, minorCheckBox];
+  for (let i = 0; i < boxes.length; i++) {
+    let currentBox = boxes[i];
+    currentBox.style("color", "white");
+    currentBox.style("font-size", (15).toString() + "px");
+    currentBox.style("font-family", "sans-serif");
+    currentBox.changed(checkBoxChanged);
+  }
+  checkBoxChanged();
+}
+
+function checkBoxChanged() {
+  let notes = [];
+  if (naturalNoteCheckBox.checked()) {
+    notes = notes.concat(wholeNotes);
+  }
+  if (sharpNoteCheckBox.checked()) {
+    notes = notes.concat(sharpNotes);
+  }
+  if (flatNoteCheckBox.checked()) {
+    notes = notes.concat(flatNotes);
+  }
+
+  let majorNotes = [];
+  let minorNotes = [];
+
+  for (let i = 0; i < notes.length; i++) {
+    if (majorCheckBox.checked()) {
+      majorNotes.push(notes[i] + " Major");
+    }
+    if (minorCheckBox.checked()) {
+      minorNotes.push(notes[i] + " minor");
+    }
+  }
+  
+  chordList = majorNotes.concat(minorNotes);
 }
 
 function createSpeedButtons() {
@@ -78,9 +133,9 @@ function createSpeedButtons() {
     fasterButton.style("background-color", color(BACKGROUND));
     fasterButton.style("color", color(255));
   });
-  
+
   fasterButton.mouseClicked(() => speedSlider.value(speedSlider.value() + RATE));
-  
+
 
   slowerButton = createButton("Slower");
   slowerButton.style("width", (speedSlider.size().width / 8).toString() + "px");
@@ -209,7 +264,7 @@ function draw() {
   drawSliderText();
   textAlign(CENTER, BOTTOM);
   textSize(50);
-  text(isStarted ? chordList[chordIndex] : "Click Start", width / 2, height / 3);
+  text(isStarted ? (chordList.length == 0 ? "Check Boxes to Enable Chords" : chordList[chordIndex]) : "Click Start", width / 2, height / 3.5);
   textSize(20);
   text("Speed: " + map(speedSlider.value(), 0, MAX_DELAY - MIN_DELAY, 0, 100).toFixed(1) + "%\t(" + (MAX_DELAY - speedSlider.value()).toFixed(1) + " seconds between each)", width / 2, height / 2);
 
